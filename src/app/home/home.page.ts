@@ -16,11 +16,16 @@ export class HomePage {
   public students: Student[];
 
   constructor(private studentService: StudentService, private alertController: AlertController, private router: Router) {
-    this.students = this.studentService.getStudents();
+    //this.students = this.studentService.getStudents();
+
+    this.studentService.getStudents().subscribe(res => {
+      this.students = res;
+      console.log(this.students)
+    })
 
   }
 
-  public async removeStudent(pos: number) {
+  public async removeStudent(id: string) {
     const alert = await this.alertController.create({
       header: 'Confirmación',
       subHeader: '¿Estás seguro que deseas eliminar?',
@@ -37,16 +42,22 @@ export class HomePage {
           text: 'Aceptar',
           role: 'confirm',
           handler: () => {
-            this.students = this.studentService.removeStudent(pos);
+            this.studentService.removeStudent(id);
           }
         }
       ]
     });
 
     await alert.present();
+  }
 
-
-
+  public getStudentByID(id: string) {
+    this.router.navigate(['/view-student'], {
+      queryParams: {
+        id: id
+      }
+    })
+    this.studentService.getStudentByID(id);
   }
 
   public getStudentByControlNumber(cn: string): void {
