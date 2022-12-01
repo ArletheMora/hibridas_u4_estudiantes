@@ -15,6 +15,8 @@ export class UpdateStudentPage implements OnInit {
   public myForm: FormGroup;
   public validationMessages: object;
 
+  public id : string;
+
   constructor(
     private router: Router,
     private toastController: ToastController,
@@ -22,7 +24,7 @@ export class UpdateStudentPage implements OnInit {
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute
   ) {
-     this.student = {
+    this.student = {
       controlnumber: '',
       name: '',
       curp: '',
@@ -33,24 +35,33 @@ export class UpdateStudentPage implements OnInit {
       photo: '',
       id: ''
     }
-    console.log(this.student); 
-
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.studentService.getStudentByID(params.id).subscribe((item) => {
-        console.log(item);
-        this.student = item as Student;
-      });
- 
-      this.llenarCampos()
-    });
+    console.log(this.student);
+    
   }
 
   ngOnInit() {
     
-    
+    this.activatedRoute.queryParams.subscribe((params) => {
+      this.studentService.getStudentByID(params.id).subscribe((item) => {
+        this.id = params.id;
+        console.log(item);
+        this.student = item as Student;
+        this.myForm.get('controlnumber').setValue(this.student.controlnumber);
+        this.myForm.get('name').setValue(this.student.name);
+        this.myForm.get('curp').setValue(this.student.curp);
+        this.myForm.get('age').setValue(this.student.age);
+        this.myForm.get('nip').setValue(this.student.nip);
+        this.myForm.get('email').setValue(this.student.email);
+        this.myForm.get('career').setValue(this.student.career);
+        this.myForm.get('photo').setValue(this.student.photo);
+
+      });
+
+      this.llenarCampos()
+    });
   }
 
-  public llenarCampos(){
+  public llenarCampos() {
     this.myForm = this.fb.group({
       controlnumber: [
         this.student.controlnumber,
@@ -118,7 +129,30 @@ export class UpdateStudentPage implements OnInit {
       ],
     };
   }
-  public updateStudent(){
-    this.studentService.updateStudent(this.student.id, this.student);
+  async presentToast(position: 'top' | 'middle' | 'bottom') {
+    const toast = await this.toastController.create({
+      message: 'GUARDADO CORRECTAMENTE',
+      duration: 1500,
+      position,
+      color: 'success'
+    });
+    await toast.present();
+  }
+  public updateStudent() {
+    this.student = {
+      controlnumber: this.myForm.controls.controlnumber.value,
+      name: this.myForm.controls.name.value,
+      curp: this.myForm.controls.curp.value,
+      age: this.myForm.controls.age.value,
+      nip: this.myForm.controls.nip.value,
+      email: this.myForm.controls.email.value,
+      career: this.myForm.controls.career.value,
+      photo: this.myForm.controls.photo.value,
+    }
+
+    this.studentService.updateStudent(this.id, this.student);
+    this.presentToast('top');
+    console.log(this.student);
+    this.router.navigate(['..']);
   }
 }

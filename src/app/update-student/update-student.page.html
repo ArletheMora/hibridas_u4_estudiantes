@@ -9,7 +9,7 @@
 
 <ion-content padding>
   <ion-grid>
-      <form [formGroup]="myForm">
+      <form *ngIf="myForm" [formGroup]="myForm">
           <ion-row>
               <ion-col>
                   <ion-item>
