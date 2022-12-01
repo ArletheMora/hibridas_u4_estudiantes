@@ -1,7 +1,7 @@
+import { Student } from './../models/student';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Student } from "../models/student";
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -82,6 +82,11 @@ export class StudentService {
     this.firestore.collection('students').add(student)
     /* this.students.push(student);
     return this.students; */
+  }
+
+  //PROBAR
+  public updateStudent(id:string, student: Student){
+    this.firestore.collection('students').doc(id).update(student);
   }
 
 }

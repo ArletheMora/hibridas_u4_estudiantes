@@ -5,7 +5,6 @@ import { StudentService } from "../services/student.service";
 import { AlertController } from "@ionic/angular";
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -23,6 +22,14 @@ export class HomePage {
       console.log(this.students)
     })
 
+  }
+
+  public async updateStudent(id: string){
+    this.router.navigate(['/update-student'],{
+      queryParams: {
+        id: id
+      }
+    });
   }
 
   public async removeStudent(id: string) {
